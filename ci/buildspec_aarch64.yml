@@ -17,10 +17,10 @@ phases:
     commands:
     - echo Build started on `date`
     - echo Building the Docker image...
-    - docker build -t sklearn-base:$FRAMEWORK_VERSION-cpu-py3  -f docker/$FRAMEWORK_VERSION/base/Dockerfile_aarch64.cpu .
+    - docker build -t sklearn-base:$FRAMEWORK_VERSION-cpu-py3  -f docker/$FRAMEWORK_VERSION/base/Dockerfile_aarm64.cpu .
     - pip install wheel setuptools
     - python setup.py bdist_wheel
-    - docker build -t preprod-sklearn:$FRAMEWORK_VERSION-cpu-py3 -f docker/$FRAMEWORK_VERSION/final/Dockerfile_aarch64.cpu .
+    - docker build -t preprod-sklearn:$FRAMEWORK_VERSION-cpu-py3 -f docker/$FRAMEWORK_VERSION/final/Dockerfile_aarm64.cpu .
     - docker tag preprod-sklearn:$FRAMEWORK_VERSION-cpu-py3 515193369038.dkr.ecr.us-west-2.amazonaws.com/sagemaker-scikit-learn:$FRAMEWORK_VERSION-cpu-py3
   post_build:
     commands:
