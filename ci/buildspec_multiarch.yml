@@ -25,17 +25,17 @@ phases:
     - CPU_TAG=${BASE_TAG}-cpu-py3
     - ARM_TAG=${BASE_TAG}-arm64-cpu-py3
     - # Remove -multiarch suffix to overwrite previous tags
-    - docker manifest create ${BASE_TAG}-multiarch-test ${ARM_TAG} ${CPU_TAG}
-    - docker manifest annotate --arch arm64 ${BASE_TAG}-multiarch ${ARM_TAG}
+    - docker manifest create ${BASE_TAG}-multiarch${ARM_TAG} ${CPU_TAG}
+    - docker manifest annotate --arch arm64 ${BASE_TAG}-multiarch${ARM_TAG}
     - docker manifest annotate --arch amd64 ${BASE_TAG}-multiarch ${CPU_TAG}
-    - docker manifest create ${CPU_TAG}-multiarch-test ${ARM_TAG} ${CPU_TAG}
-    - docker manifest annotate --arch arm64 ${ARM_TAG}-multiarch ${ARM_TAG}
+    - docker manifest create ${CPU_TAG}-multiarch${ARM_TAG} ${CPU_TAG}
+    - docker manifest annotate --arch arm64 ${CPU_TAG}-multiarch ${ARM_TAG}
     - docker manifest annotate --arch amd64 ${CPU_TAG}-multiarch ${CPU_TAG}
   post_build:
     commands:
     - echo Build completed on `date`
     - echo Pushing the Docker manifest...
-    - docker manifest push ${BASE_TAG}-multiarch-test
-    - docker manifest inspect ${BASE_TAG}-multiarch-test
-    - docker manifest push ${CPU_TAG}-multiarch-test
-    - docker manifest inspect ${CPU_TAG}-multiarch-test
+    - docker manifest push ${BASE_TAG}-multiarch
+    - docker manifest inspect ${BASE_TAG}-multiarch
+    - docker manifest push ${CPU_TAG}-multiarch
+    - docker manifest inspect ${CPU_TAG}-multiarch
