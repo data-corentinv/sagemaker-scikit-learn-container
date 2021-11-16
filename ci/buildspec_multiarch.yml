@@ -21,7 +21,7 @@ phases:
     - echo Buildling the Docker manifest...
     - export DOCKER_CLI_EXPERIMENTAL=enabled
     - echo Docker login...
-    - BASE_TAG=${SM_ALPHA}.dkr.ecr.us-west-2.amazonaws.com/sklearn-base:${FRAMEWORK_VERSION}
+    - BASE_TAG=${SM_ALPHA}.dkr.ecr.us-west-2.amazonaws.com/sagemaker-scikit-learn:${FRAMEWORK_VERSION}
     - CPU_TAG=${BASE_TAG}-cpu-py3
     - ARM_TAG=${BASE_TAG}-arm64-cpu-py3
     - # Remove -multiarch suffix to overwrite previous tags
