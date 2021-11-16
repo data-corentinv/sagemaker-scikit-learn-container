@@ -1,0 +1,40 @@
+version: 0.2
+
+env:
+  variables:
+    FRAMEWORK_VERSION: "0.23-1"
+phases:
+  install:
+    runtime-versions:
+      python: 3.7
+      docker: 19
+    commands:
+    - yum update -y
+  pre_build:
+    commands:
+    - echo Pre-build started on `date`
+    - echo Logging in to Amazon ECR...
+    - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
+  build:
+    commands:
+    - echo Build started on `date`
+    - echo Buildling the Docker manifest...
+    - export DOCKER_CLI_EXPERIMENTAL=enabled
+    - echo Docker login...
+    - BASE_TAG=${SM_ALPHA}.dkr.ecr.us-west-2.amazonaws.com/sklearn-base:${FRAMEWORK_VERSION}
+    - CPU_TAG=${BASE_TAG}-cpu-py3
+    - # Remove -multiarch suffix to overwrite previous tags
+    - docker manifest create ${BASE_TAG}-multiarch-test ${CPU_TAG}-arm64 ${CPU_TAG}-amd64
+    - docker manifest annotate --arch arm64 ${BASE_TAG}-multiarch ${CPU_TAG}-arm64
+    - docker manifest annotate --arch amd64 ${BASE_TAG}-multiarch ${CPU_TAG}-amd64
+    - docker manifest create ${CPU_TAG}-multiarch-test ${CPU_TAG}-arm64 ${CPU_TAG}-amd64
+    - docker manifest annotate --arch arm64 ${CPU_TAG}-multiarch ${CPU_TAG}-arm64
+    - docker manifest annotate --arch amd64 ${CPU_TAG}-multiarch ${CPU_TAG}-amd64
+  post_build:
+    commands:
+    - echo Build completed on `date`
+    - echo Pushing the Docker manifest...
+    - docker manifest push ${BASE_TAG}-multiarch-test
+    - docker manifest inspect ${BASE_TAG}-multiarch-test
+    - docker manifest push ${CPU_TAG}-multiarch-test
+    - docker manifest inspect ${CPU_TAG}-multiarch-test
