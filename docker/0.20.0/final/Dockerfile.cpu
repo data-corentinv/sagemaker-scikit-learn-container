@@ -1,4 +1,4 @@
-FROM sklearn-base:0.20.0-cpu-py3
+FROM sklearn-base:latest
 ARG py_version
 
 LABEL com.amazonaws.sagemaker.capabilities.accept-bind-to-port=true
